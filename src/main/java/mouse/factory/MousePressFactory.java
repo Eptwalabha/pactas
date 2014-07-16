@@ -1,6 +1,5 @@
 package mouse.factory;
 
-import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
 import mouse.actions.MouseAction;
 import mouse.actions.MousePressAction;
 

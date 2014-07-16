@@ -1,6 +1,7 @@
 package mouse;
 
 import mouse.actions.MouseAction;
+import utility.GameWindow;
 
 /**
  * User: Eptwalabha
@@ -30,8 +31,8 @@ public class MouseNode {
         return action;
     }
 
-    public String getString() {
-        return action.getString();
+    public String getString(GameWindow gameWindow) {
+        return action.getString(gameWindow);
     }
 
     public long getTimeToWaitMillis() {

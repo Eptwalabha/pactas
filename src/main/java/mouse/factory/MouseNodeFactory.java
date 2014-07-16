@@ -2,6 +2,7 @@ package mouse.factory;
 
 import mouse.MouseNode;
 import mouse.actions.MouseAction;
+import utility.GameWindow;
 
 import java.util.HashMap;
 
@@ -14,9 +15,9 @@ public class MouseNodeFactory {
 
     private HashMap<String, MouseActionFactory> actions;
 
-    public MouseNodeFactory() {
+    public MouseNodeFactory(GameWindow gameWindow) {
         actions = new HashMap<String, MouseActionFactory>();
-        actions.put("1", new MouseMoveFactory());
+        actions.put("1", new MouseMoveFactory(gameWindow));
         actions.put("2", new MousePressFactory());
         actions.put("3", new MouseReleaseFactory());
     }

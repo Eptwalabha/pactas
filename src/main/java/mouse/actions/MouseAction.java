@@ -1,5 +1,7 @@
 package mouse.actions;
 
+import utility.GameWindow;
+
 import java.awt.*;
 
 /**
@@ -9,5 +11,5 @@ import java.awt.*;
  */
 public interface MouseAction {
     public void process(Robot robot);
-    public String getString();
+    public String getString(GameWindow gameWindow);
 }

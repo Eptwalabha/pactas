@@ -1,5 +1,7 @@
 package mouse.actions;
 
+import utility.GameWindow;
+
 import java.awt.*;
 
 /**
@@ -30,7 +32,7 @@ public class MouseMoveAction implements MouseAction {
     }
 
     @Override
-    public String getString() {
-        return "1;0;" + x + ";" + y;
+    public String getString(GameWindow gameWindow) {
+        return "1;0;" + gameWindow.getPercentageX(x) + ";" + gameWindow.getPercentageY(y);
     }
 }

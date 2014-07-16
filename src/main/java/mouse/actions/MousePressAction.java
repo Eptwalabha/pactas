@@ -1,5 +1,7 @@
 package mouse.actions;
 
+import utility.GameWindow;
+
 import java.awt.*;
 
 /**
@@ -24,7 +26,7 @@ public class MousePressAction implements MouseAction {
     }
 
     @Override
-    public String getString() {
+    public String getString(GameWindow gameWindow) {
         return "2;0;" + button;
     }
 }

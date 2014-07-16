@@ -6,6 +6,7 @@ import mouse.actions.MouseReleaseAction;
 import mouse.factory.WrongParameter;
 import org.junit.Before;
 import org.junit.Test;
+import utility.GameWindow;
 
 import java.awt.event.MouseEvent;
 
@@ -21,10 +22,12 @@ public class MouseNodeFactoryTest {
 
     private MouseNodeFactory mouseNodeFactory;
     private MouseNode mouseNode;
+    private GameWindow gameWindow;
 
     @Before
     public void setUp() {
-        mouseNodeFactory = new MouseNodeFactory();
+        gameWindow = new GameWindow(100, 100);
+        mouseNodeFactory = new MouseNodeFactory(gameWindow);
         mouseNode = new MouseNode();
     }
 
@@ -42,10 +45,10 @@ public class MouseNodeFactoryTest {
     @Test
     public void canCreateAMouseMoveActionFromAStringOfParameters() {
         try {
-            mouseNode = mouseNodeFactory.createMouseActionFromString("1;0;10;200");
+            mouseNode = mouseNodeFactory.createMouseActionFromString("1;0;0.1;0.2");
             MouseMoveAction mouseMoveAction = (MouseMoveAction) mouseNode.getMouseActionInterface();
             assertThat(mouseMoveAction.getX()).isEqualTo(10);
-            assertThat(mouseMoveAction.getY()).isEqualTo(200);
+            assertThat(mouseMoveAction.getY()).isEqualTo(20);
         } catch (WrongParameter e) {
             e.printStackTrace();
             fail();
@@ -85,7 +88,7 @@ public class MouseNodeFactoryTest {
     @Test
     public void canThrowsAnExceptionWhenParametersAreMissing() {
         try {
-            mouseNodeFactory.createMouseActionFromString("3;0;0;0");
+            mouseNodeFactory.createMouseActionFromString("3;0;0.0;0.0");
             fail();
         } catch (WrongParameter e) {
             assertThat(e.getMessage()).isEqualTo("wrong parameter : got 4 parameters when 3 where expected");
@@ -95,7 +98,7 @@ public class MouseNodeFactoryTest {
     @Test
     public void canThrowsAnExceptionWhenTypeParameterIsIncorrect() {
         try {
-            mouseNodeFactory.createMouseActionFromString("a;0;0;0");
+            mouseNodeFactory.createMouseActionFromString("a;0;0.0;0.0");
             fail();
         } catch (WrongParameter e) {
             assertThat(e.getMessage()).isEqualTo("wrong parameter : unknown 'a' as MouseAction type");
@@ -105,7 +108,7 @@ public class MouseNodeFactoryTest {
     @Test
     public void canThrowsAnExceptionWhenTimeParameterIsIncorrect() {
         try {
-            mouseNodeFactory.createMouseActionFromString("1;b;0;0");
+            mouseNodeFactory.createMouseActionFromString("1;b;0.0;0.0");
             fail();
         } catch (WrongParameter e) {
             assertThat(e.getMessage()).isEqualTo("wrong parameter : 'b' cannot be converted as millisecond");
@@ -115,7 +118,7 @@ public class MouseNodeFactoryTest {
     @Test
     public void canSetTimeToWaitTillNextNode() {
         try {
-            mouseNode = mouseNodeFactory.createMouseActionFromString("1;200;10;200");
+            mouseNode = mouseNodeFactory.createMouseActionFromString("1;200;0.1;0.2");
             assertThat(mouseNode.getTimeToWaitMillis()).isEqualTo(200L);
         } catch (WrongParameter e) {
             e.printStackTrace();
@@ -126,19 +129,19 @@ public class MouseNodeFactoryTest {
     @Test
     public void canMouseNodeMoveGenerateAString() {
         mouseNode.setAction(new MouseMoveAction(10, 20));
-        assertThat(mouseNode.getString()).isEqualTo("1;0;10;20");
+        assertThat(mouseNode.getString(new GameWindow(100, 100))).isEqualTo("1;0;0.1;0.2");
+        assertThat(mouseNode.getString(new GameWindow(50, 200))).isEqualTo("1;0;0.2;0.1");
     }
 
     @Test
     public void canMouseNodePressGenerateAString() {
         mouseNode.setAction(new MousePressAction(MouseEvent.BUTTON1));
-        assertThat(mouseNode.getString()).isEqualTo("2;0;" + MouseEvent.BUTTON1);
+        assertThat(mouseNode.getString(gameWindow)).isEqualTo("2;0;" + MouseEvent.BUTTON1);
     }
 
     @Test
     public void canMouseNodeReleaseGenerateAString() {
         mouseNode.setAction(new MouseReleaseAction(MouseEvent.BUTTON2));
-        assertThat(mouseNode.getString()).isEqualTo("3;0;" + MouseEvent.BUTTON2);
-        Integer.parseInt("1");
+        assertThat(mouseNode.getString(gameWindow)).isEqualTo("3;0;" + MouseEvent.BUTTON2);
     }
 }
