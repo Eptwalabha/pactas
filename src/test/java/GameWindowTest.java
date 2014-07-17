@@ -37,19 +37,19 @@ public class GameWindowTest {
 
     @Test
     public void byDefaultPositionXOfGameWindowIsZero() {
-        assertThat(gameWindow.getPositionX()).isEqualTo(0);
+        assertThat(gameWindow.x).isEqualTo(0);
     }
 
     @Test
     public void byDefaultPositionYOfGameWindowIsZero() {
-        assertThat(gameWindow.getPositionY()).isEqualTo(0);
+        assertThat(gameWindow.y).isEqualTo(0);
     }
 
     @Test
     public void canChangePositionOfGameWindow() {
         gameWindow.setPosition(50, 130);
-        assertThat(gameWindow.getPositionX()).isEqualTo(50);
-        assertThat(gameWindow.getPositionY()).isEqualTo(130);
+        assertThat(gameWindow.x).isEqualTo(50);
+        assertThat(gameWindow.y).isEqualTo(130);
     }
 
     @Test
