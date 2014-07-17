@@ -49,4 +49,8 @@ public class MouseMoveAction implements MouseAction {
 
     @Override
     public void setButton(int button) {}
+
+    public Point getLocation() {
+        return new Point(x, y);
+    }
 }

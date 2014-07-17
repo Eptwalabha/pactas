@@ -46,7 +46,7 @@ public class MouseNodeFactoryTest {
     public void canCreateAMouseMoveActionFromAStringOfParameters() {
         try {
             mouseNode = mouseNodeFactory.createMouseActionFromString("1;0;0.1;0.2");
-            MouseMoveAction mouseMoveAction = (MouseMoveAction) mouseNode.getMouseActionInterface();
+            MouseMoveAction mouseMoveAction = (MouseMoveAction) mouseNode.getMouseAction();
             assertThat(mouseMoveAction.getX()).isEqualTo(10);
             assertThat(mouseMoveAction.getY()).isEqualTo(20);
         } catch (WrongParameter e) {
@@ -59,7 +59,7 @@ public class MouseNodeFactoryTest {
     public void canCreateAMousePressActionFromAStringOfParameters() {
         try {
             mouseNode = mouseNodeFactory.createMouseActionFromString("2;0;" + MouseEvent.BUTTON1);
-            MousePressAction mousePressAction = (MousePressAction) mouseNode.getMouseActionInterface();
+            MousePressAction mousePressAction = (MousePressAction) mouseNode.getMouseAction();
             assertThat(mousePressAction.getButton()).isEqualTo(MouseEvent.BUTTON1);
         } catch (WrongParameter e) {
             e.printStackTrace();
@@ -71,7 +71,7 @@ public class MouseNodeFactoryTest {
     public void canCreateAMouseReleaseActionFromAStringOfParameters() {
         try {
             mouseNode = mouseNodeFactory.createMouseActionFromString("3;0;" + MouseEvent.BUTTON2);
-            MouseReleaseAction mouseReleaseAction = (MouseReleaseAction) mouseNode.getMouseActionInterface();
+            MouseReleaseAction mouseReleaseAction = (MouseReleaseAction) mouseNode.getMouseAction();
             assertThat(mouseReleaseAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
         } catch (WrongParameter e) {
             e.printStackTrace();

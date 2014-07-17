@@ -113,7 +113,7 @@ public class MouseNodeTest {
         mouseNode.setButton(MouseEvent.BUTTON2);
         assertThat(mouseReleaseAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
     }
-    
+
     private class RobotMock extends Robot {
 
         private int x;

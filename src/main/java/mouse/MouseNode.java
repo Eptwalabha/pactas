@@ -27,7 +27,7 @@ public class MouseNode {
         return nextAction;
     }
 
-    public MouseAction getMouseActionInterface() {
+    public MouseAction getMouseAction() {
         return action;
     }
 
