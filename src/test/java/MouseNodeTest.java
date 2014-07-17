@@ -19,10 +19,12 @@ import static org.fest.assertions.Fail.fail;
 public class MouseNodeTest {
 
     private RobotMock robot;
+    private MouseNode mouseNode;
 
     @Before
     public void setUp() throws AWTException {
-        this.robot = new RobotMock();
+        robot = new RobotMock();
+        mouseNode = new MouseNode();
     }
 
     @Test
@@ -78,6 +80,40 @@ public class MouseNodeTest {
 
     }
 
+    @Test
+    public void canChangeMouseMoveActionPosition() {
+        MouseMoveAction mouseMoveAction = new MouseMoveAction(20, 30);
+        mouseNode.setAction(mouseMoveAction);
+        mouseNode.moveLocation(-10, 50);
+        assertThat(mouseMoveAction.getX()).isEqualTo(10);
+        assertThat(mouseMoveAction.getY()).isEqualTo(80);
+    }
+
+    @Test
+    public void canSetMouseMoveActionPosition() {
+        MouseMoveAction mouseMoveAction = new MouseMoveAction(20, 30);
+        mouseNode.setAction(mouseMoveAction);
+        mouseNode.setLocation(10, 50);
+        assertThat(mouseMoveAction.getX()).isEqualTo(10);
+        assertThat(mouseMoveAction.getY()).isEqualTo(50);
+    }
+
+    @Test
+    public void canChangeMouseButtonOnMousePressAction() {
+        MousePressAction mousePressAction = new MousePressAction(MouseEvent.BUTTON1);
+        mouseNode.setAction(mousePressAction);
+        mouseNode.setButton(MouseEvent.BUTTON2);
+        assertThat(mousePressAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
+    }
+
+    @Test
+    public void canChangeMouseButtonOnMouseReleaseAction() {
+        MouseReleaseAction mouseReleaseAction = new MouseReleaseAction(MouseEvent.BUTTON1);
+        mouseNode.setAction(mouseReleaseAction);
+        mouseNode.setButton(MouseEvent.BUTTON2);
+        assertThat(mouseReleaseAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
+    }
+    
     private class RobotMock extends Robot {
 
         private int x;

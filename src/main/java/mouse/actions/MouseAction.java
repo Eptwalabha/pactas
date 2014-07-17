@@ -11,5 +11,12 @@ import java.awt.*;
  */
 public interface MouseAction {
     public void process(Robot robot);
+
     public String getString(GameWindow gameWindow);
+
+    public void moveLocation(int x, int y);
+
+    public void setLocation(int x, int y);
+
+    public void setButton(int button);
 }

@@ -14,8 +14,7 @@ public class MouseMoveAction implements MouseAction {
     private int y;
 
     public MouseMoveAction(int x, int y) {
-        this.x = x;
-        this.y = y;
+        setLocation(x, y);
     }
 
     public int getX() {
@@ -35,4 +34,19 @@ public class MouseMoveAction implements MouseAction {
     public String getString(GameWindow gameWindow) {
         return "1;0;" + gameWindow.getPercentageX(x) + ";" + gameWindow.getPercentageY(y);
     }
+
+    @Override
+    public void moveLocation(int x, int y) {
+        this.x += x;
+        this.y += y;
+    }
+
+    @Override
+    public void setLocation(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
+    public void setButton(int button) {}
 }

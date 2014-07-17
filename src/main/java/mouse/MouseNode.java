@@ -42,4 +42,16 @@ public class MouseNode {
     public void setTimeToWaitInMilli(long timeToWait) {
         this.timeToWait = timeToWait;
     }
+
+    public void moveLocation(int x, int y) {
+        action.moveLocation(x, y);
+    }
+
+    public void setLocation(int x, int y) {
+        action.setLocation(x, y);
+    }
+
+    public void setButton(int button) {
+        action.setButton(button);
+    }
 }

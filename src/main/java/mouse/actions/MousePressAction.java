@@ -29,4 +29,15 @@ public class MousePressAction implements MouseAction {
     public String getString(GameWindow gameWindow) {
         return "2;0;" + button;
     }
+
+    @Override
+    public void moveLocation(int x, int y) {}
+
+    @Override
+    public void setLocation(int x, int y) {}
+
+    @Override
+    public void setButton(int button) {
+        this.button = button;
+    }
 }
