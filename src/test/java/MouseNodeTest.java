@@ -1,3 +1,4 @@
+import mock.RobotMock;
 import mouse.*;
 import mouse.actions.MouseAction;
 import mouse.actions.MouseMoveAction;
@@ -10,7 +11,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.fest.assertions.Fail.fail;
 
 /**
  * User: Eptwalabha
@@ -170,45 +170,4 @@ public class MouseNodeTest {
         assertThat(mouseNodeA.size()).isEqualTo(3);
     }
 
-    private class RobotMock extends Robot {
-
-        private int x;
-        private int y;
-        private int lastButtonMousePressed;
-        private int lastButtonMouseReleased;
-
-        public RobotMock() throws AWTException {}
-
-        @Override
-        public synchronized void mouseMove(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public synchronized void mousePress(int button) {
-            this.lastButtonMousePressed = button;
-        }
-
-        @Override
-        public synchronized void mouseRelease(int button) {
-            this.lastButtonMouseReleased = button;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getLastButtonMousePressed() {
-            return lastButtonMousePressed;
-        }
-
-        public int getLastButtonMouseReleased() {
-            return lastButtonMouseReleased;
-        }
-    }
 }
