@@ -27,7 +27,7 @@ public class MouseReleaseAction implements MouseAction {
 
     @Override
     public String getString(GameWindow gameWindow) {
-        return "3;0;" + button;
+        return String.valueOf(button);
     }
 
     @Override
@@ -39,5 +39,10 @@ public class MouseReleaseAction implements MouseAction {
     @Override
     public void setButton(int button) {
         this.button = button;
+    }
+
+    @Override
+    public String getType() {
+        return ACTION_RELEASE;
     }
 }

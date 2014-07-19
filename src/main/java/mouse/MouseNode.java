@@ -1,6 +1,7 @@
 package mouse;
 
 import mouse.actions.MouseAction;
+import mouse.actions.MouseNoAction;
 import utility.GameWindow;
 
 /**
@@ -13,11 +14,15 @@ public class MouseNode {
     private MouseAction action;
     private long timeToWait;
 
+    public MouseNode() {
+        action = new MouseNoAction();
+    }
+
     public void setAction(MouseAction action) {
         this.action = action;
     }
 
-    public void setNextMouseAction(MouseNode mouseNode) {
+    public void setNext(MouseNode mouseNode) {
         this.nextAction = mouseNode;
     }
 
@@ -32,7 +37,7 @@ public class MouseNode {
     }
 
     public String getString(GameWindow gameWindow) {
-        return action.getString(gameWindow);
+        return action.getType() + ";" + timeToWait + ";" + action.getString(gameWindow);
     }
 
     public long getTimeToWaitMillis() {
@@ -53,5 +58,24 @@ public class MouseNode {
 
     public void setButton(int button) {
         action.setButton(button);
+    }
+
+    public int size() {
+
+        if (nextAction == null)
+            return 1;
+
+        int size = 1;
+        MouseNode cursor = this;
+        while (cursor.nextAction != null) {
+            ++size;
+            cursor = cursor.nextAction;
+        }
+
+        return size;
+    }
+
+    public String getActionType() {
+        return action.getType();
     }
 }

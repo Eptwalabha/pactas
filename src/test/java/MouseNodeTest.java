@@ -1,4 +1,5 @@
 import mouse.*;
+import mouse.actions.MouseAction;
 import mouse.actions.MouseMoveAction;
 import mouse.actions.MousePressAction;
 import mouse.actions.MouseReleaseAction;
@@ -25,6 +26,12 @@ public class MouseNodeTest {
     public void setUp() throws AWTException {
         robot = new RobotMock();
         mouseNode = new MouseNode();
+    }
+
+    @Test
+    public void byDefaultAMouseNodeHasAMouseNoActionAsMouseAction() {
+        MouseAction mouseAction = mouseNode.getMouseAction();
+        assertThat(mouseAction.getType()).isEqualTo(MouseAction.ACTION_NONE);
     }
 
     @Test
@@ -66,7 +73,7 @@ public class MouseNodeTest {
     public void canSetTheNextMouseAction() {
         MouseNode mouseNodeA = new MouseNode();
         MouseNode mouseNodeB = new MouseNode();
-        mouseNodeA.setNextMouseAction(mouseNodeB);
+        mouseNodeA.setNext(mouseNodeB);
         assertThat(mouseNodeA.getNext()).isEqualTo(mouseNodeB);
     }
 
@@ -112,6 +119,33 @@ public class MouseNodeTest {
         mouseNode.setAction(mouseReleaseAction);
         mouseNode.setButton(MouseEvent.BUTTON2);
         assertThat(mouseReleaseAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
+    }
+
+    @Test
+    public void canMouseActionReturnItsType() {
+        MouseAction mouseMoveAction = new MouseMoveAction(10, 20);
+        MouseAction mousePressAction = new MousePressAction(MouseEvent.BUTTON1);
+        MouseAction mouseReleaseAction = new MouseReleaseAction(MouseEvent.BUTTON1);
+        assertThat(mouseMoveAction.getType()).isEqualTo(MouseAction.ACTION_MOVE);
+        assertThat(mousePressAction.getType()).isEqualTo(MouseAction.ACTION_PRESS);
+        assertThat(mouseReleaseAction.getType()).isEqualTo(MouseAction.ACTION_RELEASE);
+    }
+
+    @Test
+    public void canReturn1WhenForTheSizeChainWithASingleMouseNode() {
+        assertThat(mouseNode.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void canReturnTheSizeOfAMouseNodeChain() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        MouseNode mouseNodeC = new MouseNode();
+
+        mouseNodeA.setNext(mouseNodeB);
+        mouseNodeB.setNext(mouseNodeC);
+
+        assertThat(mouseNodeA.size()).isEqualTo(3);
     }
 
     private class RobotMock extends Robot {

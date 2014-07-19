@@ -10,6 +10,11 @@ import java.awt.*;
  * Time: 21:42
  */
 public interface MouseAction {
+    String ACTION_NONE = "0";
+    String ACTION_MOVE = "1";
+    String ACTION_PRESS = "2";
+    String ACTION_RELEASE = "3";
+
     public void process(Robot robot);
 
     public String getString(GameWindow gameWindow);
@@ -19,4 +24,6 @@ public interface MouseAction {
     public void setLocation(int x, int y);
 
     public void setButton(int button);
+
+    String getType();
 }

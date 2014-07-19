@@ -32,7 +32,7 @@ public class MouseMoveAction implements MouseAction {
 
     @Override
     public String getString(GameWindow gameWindow) {
-        return "1;0;" + gameWindow.getPercentageX(x) + ";" + gameWindow.getPercentageY(y);
+        return gameWindow.getPercentageX(x) + ";" + gameWindow.getPercentageY(y);
     }
 
     @Override
@@ -49,6 +49,11 @@ public class MouseMoveAction implements MouseAction {
 
     @Override
     public void setButton(int button) {}
+
+    @Override
+    public String getType() {
+        return ACTION_MOVE;
+    }
 
     public Point getLocation() {
         return new Point(x, y);

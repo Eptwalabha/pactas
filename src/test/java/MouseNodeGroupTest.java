@@ -97,7 +97,7 @@ public class MouseNodeGroupTest {
         mouseNodeGroup.add(mouseNodeB);
         mouseNodeGroup.add(mouseNodeC);
 
-        Rectangle boundingBox = mouseNodeGroup.getBoundingBox();
+        Rectangle boundingBox = mouseNodeGroup.getBoundingRectangle();
         assertThat(boundingBox.x).isEqualTo(20);
         assertThat(boundingBox.y).isEqualTo(30);
         assertThat(boundingBox.width).isEqualTo(180);
@@ -115,7 +115,7 @@ public class MouseNodeGroupTest {
         mouseNodeGroup.add(mouseNodeA);
         mouseNodeGroup.add(mouseNodeB);
 
-        mouseNodeGroup.resizeBoundingBox(0.5f, 0.5f);
+        mouseNodeGroup.resizeBoundingRectangle(0.5f, 0.5f);
 
         assertThat(mouseMoveActionA.getX()).isEqualTo(20);
         assertThat(mouseMoveActionA.getY()).isEqualTo((int) ((130 - 50) * 0.5f) + 50);

@@ -4,6 +4,8 @@ import mouse.MouseNode;
 import mouse.actions.MouseAction;
 import utility.GameWindow;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -13,13 +15,13 @@ import java.util.HashMap;
  */
 public class MouseNodeFactory {
 
-    private HashMap<String, MouseActionFactory> actions;
+    private final HashMap<String, MouseActionFactory> actions;
 
     public MouseNodeFactory(GameWindow gameWindow) {
         actions = new HashMap<String, MouseActionFactory>();
-        actions.put("1", new MouseMoveFactory(gameWindow));
-        actions.put("2", new MousePressFactory());
-        actions.put("3", new MouseReleaseFactory());
+        actions.put(MouseAction.ACTION_MOVE, new MouseMoveFactory(gameWindow));
+        actions.put(MouseAction.ACTION_PRESS, new MousePressFactory());
+        actions.put(MouseAction.ACTION_RELEASE, new MouseReleaseFactory());
     }
 
     public MouseNode createMouseActionFromString(String action) throws WrongParameter {
@@ -43,6 +45,25 @@ public class MouseNodeFactory {
         MouseNode mouseNode = new MouseNode();
         mouseNode.setAction(mouseAction);
         mouseNode.setTimeToWaitInMilli(time);
+        return mouseNode;
+    }
+
+    public MouseNode loadChainFromBufferReader(BufferedReader bufferReader) throws IOException, WrongParameter {
+        String line;
+        MouseNode mouseNode = null;
+        MouseNode mouseNodeCursor = null;
+        while ((line = bufferReader.readLine()) != null) {
+
+            MouseNode currentMouseNode = createMouseActionFromString(line);
+            if (mouseNode == null) {
+                mouseNode = currentMouseNode;
+                mouseNodeCursor = mouseNode;
+                continue;
+            }
+
+            mouseNodeCursor.setNext(currentMouseNode);
+            mouseNodeCursor = mouseNodeCursor.getNext();
+        }
         return mouseNode;
     }
 }

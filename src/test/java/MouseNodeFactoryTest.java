@@ -1,4 +1,5 @@
 import mouse.MouseNode;
+import mouse.actions.MouseAction;
 import mouse.factory.MouseNodeFactory;
 import mouse.actions.MouseMoveAction;
 import mouse.actions.MousePressAction;
@@ -9,6 +10,10 @@ import org.junit.Test;
 import utility.GameWindow;
 
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -118,7 +123,7 @@ public class MouseNodeFactoryTest {
     @Test
     public void canSetTimeToWaitTillNextNode() {
         try {
-            mouseNode = mouseNodeFactory.createMouseActionFromString("1;200;0.1;0.2");
+            mouseNode = mouseNodeFactory.createMouseActionFromString(MouseAction.ACTION_MOVE + ";200;0.1;0.2");
             assertThat(mouseNode.getTimeToWaitMillis()).isEqualTo(200L);
         } catch (WrongParameter e) {
             e.printStackTrace();
@@ -129,19 +134,50 @@ public class MouseNodeFactoryTest {
     @Test
     public void canMouseNodeMoveGenerateAString() {
         mouseNode.setAction(new MouseMoveAction(10, 20));
-        assertThat(mouseNode.getString(new GameWindow(100, 100))).isEqualTo("1;0;0.1;0.2");
-        assertThat(mouseNode.getString(new GameWindow(50, 200))).isEqualTo("1;0;0.2;0.1");
+        assertThat(mouseNode.getString(new GameWindow(100, 100))).isEqualTo(MouseAction.ACTION_MOVE + ";0;0.1;0.2");
+        assertThat(mouseNode.getString(new GameWindow(50, 200))).isEqualTo(MouseAction.ACTION_MOVE + ";0;0.2;0.1");
     }
 
     @Test
     public void canMouseNodePressGenerateAString() {
         mouseNode.setAction(new MousePressAction(MouseEvent.BUTTON1));
-        assertThat(mouseNode.getString(gameWindow)).isEqualTo("2;0;" + MouseEvent.BUTTON1);
+        assertThat(mouseNode.getString(gameWindow)).isEqualTo(MouseAction.ACTION_PRESS + ";0;" + MouseEvent.BUTTON1);
     }
 
     @Test
     public void canMouseNodeReleaseGenerateAString() {
         mouseNode.setAction(new MouseReleaseAction(MouseEvent.BUTTON2));
-        assertThat(mouseNode.getString(gameWindow)).isEqualTo("3;0;" + MouseEvent.BUTTON2);
+        assertThat(mouseNode.getString(gameWindow)).isEqualTo(MouseAction.ACTION_RELEASE + ";0;" + MouseEvent.BUTTON2);
     }
+
+    @Test
+    public void canMouseNodeWithTimeToWaitGenerateAString() {
+        mouseNode.setAction(new MouseMoveAction(10, 20));
+        mouseNode.setTimeToWaitInMilli(20);
+        assertThat(mouseNode.getString(new GameWindow(100, 100))).isEqualTo(MouseAction.ACTION_MOVE + ";20;0.1;0.2");
+    }
+
+    @Test
+    public void canCreateAMouseNodeChainFromABufferedReader() throws IOException, WrongParameter {
+        String eol = System.getProperty("line.separator");
+        Reader fileReader = new StringReader("1;10;0.5;0.1" + eol +"2;20;1" + eol + "1;10;0.1;0.35268");
+        BufferedReader bufferReader = new BufferedReader(fileReader);
+        MouseNode mouseNode = mouseNodeFactory.loadChainFromBufferReader(bufferReader);
+        assertThat(mouseNode.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void canCreateCorrectMouseActionFromFile() throws IOException, WrongParameter {
+        String eol = System.getProperty("line.separator");
+        Reader fileReader = new StringReader("1;10;0.5;0.1" + eol +"2;20;1" + eol + "3;50;1");
+        BufferedReader bufferReader = new BufferedReader(fileReader);
+        MouseNode mouseNode = mouseNodeFactory.loadChainFromBufferReader(bufferReader);
+
+        assertThat(mouseNode.getActionType()).isEqualTo(MouseAction.ACTION_MOVE);
+        mouseNode = mouseNode.getNext();
+        assertThat(mouseNode.getActionType()).isEqualTo(MouseAction.ACTION_PRESS);
+        mouseNode = mouseNode.getNext();
+        assertThat(mouseNode.getActionType()).isEqualTo(MouseAction.ACTION_RELEASE);
+    }
+
 }

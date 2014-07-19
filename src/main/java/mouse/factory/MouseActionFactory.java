@@ -7,6 +7,6 @@ import mouse.actions.MouseAction;
  * Date: 15/07/2014
  * Time: 01:22
  */
-public interface MouseActionFactory {
+interface MouseActionFactory {
     public MouseAction getMouseAction(String[] args) throws WrongParameter;
 }
