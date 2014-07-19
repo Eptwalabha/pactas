@@ -10,12 +10,17 @@ import utility.GameWindow;
  * Time: 18:19
  */
 public class MouseNode {
-    private MouseNode nextAction;
+    private MouseNode nextNode;
+    private MouseNode previousNode;
     private MouseAction action;
     private long timeToWait;
 
     public MouseNode() {
-        action = new MouseNoAction();
+        this(new MouseNoAction());
+    }
+
+    public MouseNode(MouseAction action) {
+        this.action = action;
     }
 
     public void setAction(MouseAction action) {
@@ -23,13 +28,21 @@ public class MouseNode {
     }
 
     public void setNext(MouseNode mouseNode) {
-        this.nextAction = mouseNode;
+        setNext(mouseNode, timeToWait);
     }
 
-    public MouseNode getNext() throws NoMoreActionException {
-        if (nextAction == null)
-            throw new NoMoreActionException();
-        return nextAction;
+    public void setNext(MouseNode mouseNode, long timeToWait) {
+        mouseNode.previousNode = this;
+        this.nextNode = mouseNode;
+        this.timeToWait = timeToWait;
+    }
+
+    public MouseNode getNext() {
+        return nextNode;
+    }
+
+    public MouseNode getPrevious() {
+        return previousNode;
     }
 
     public MouseAction getMouseAction() {
@@ -62,14 +75,14 @@ public class MouseNode {
 
     public int size() {
 
-        if (nextAction == null)
+        if (nextNode == null)
             return 1;
 
         int size = 1;
         MouseNode cursor = this;
-        while (cursor.nextAction != null) {
+        while (cursor.nextNode != null) {
             ++size;
-            cursor = cursor.nextAction;
+            cursor = cursor.nextNode;
         }
 
         return size;
@@ -77,5 +90,10 @@ public class MouseNode {
 
     public String getActionType() {
         return action.getType();
+    }
+
+    public void detachNode() {
+        nextNode.previousNode = null;
+        nextNode = null;
     }
 }

@@ -70,7 +70,7 @@ public class MouseNodeTest {
     }
 
     @Test
-    public void canSetTheNextMouseAction() {
+    public void canSetTheNextMouseNode() {
         MouseNode mouseNodeA = new MouseNode();
         MouseNode mouseNodeB = new MouseNode();
         mouseNodeA.setNext(mouseNodeB);
@@ -78,13 +78,35 @@ public class MouseNodeTest {
     }
 
     @Test
-    public void throwAnExceptionWhenThereIsNoNextAction() {
-        MouseNode mouseNode = new MouseNode();
-        try {
-            mouseNode.getNext();
-            fail();
-        } catch (NoMoreActionException ignored) {}
+    public void canRetrievePreviousMouseNode() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        mouseNodeA.setNext(mouseNodeB);
+        assertThat(mouseNodeB.getPrevious()).isEqualTo(mouseNodeA);
+    }
 
+    @Test
+    public void canFullyDetachMouseNode() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        mouseNodeA.setNext(mouseNodeB);
+        mouseNodeA.detachNode();
+        assertThat(mouseNodeA.getNext()).isNull();
+        assertThat(mouseNodeB.getPrevious()).isNull();
+    }
+
+    @Test
+    public void canSetTheNextMouseActionAndTheTimeToWait() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        mouseNodeA.setNext(mouseNodeB, 200);
+        assertThat(mouseNodeA.getTimeToWaitMillis()).isEqualTo(200);
+    }
+
+    @Test
+    public void canSetTimeToWaitBeforeTheNextMouseNode() {
+        mouseNode.setTimeToWaitInMilli(250);
+        assertThat(mouseNode.getTimeToWaitMillis()).isEqualTo(250);
     }
 
     @Test

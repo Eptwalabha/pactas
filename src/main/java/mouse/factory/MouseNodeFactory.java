@@ -1,11 +1,13 @@
 package mouse.factory;
 
 import mouse.MouseNode;
+import mouse.NoMoreActionException;
 import mouse.actions.MouseAction;
 import utility.GameWindow;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 
 /**
@@ -65,5 +67,16 @@ public class MouseNodeFactory {
             mouseNodeCursor = mouseNodeCursor.getNext();
         }
         return mouseNode;
+    }
+
+    public void saveChainIntoBufferWriter(Writer bufferWriter, GameWindow gameWindow, MouseNode chain) {
+        try {
+            MouseNode cursor = chain;
+            do {
+                bufferWriter.write(cursor.getString(gameWindow));
+            } while ((cursor = cursor.getNext()) != null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

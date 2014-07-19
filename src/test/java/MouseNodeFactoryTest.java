@@ -9,11 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 import utility.GameWindow;
 
+import javax.swing.text.StringContent;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -82,12 +80,6 @@ public class MouseNodeFactoryTest {
             e.printStackTrace();
             fail();
         }
-    }
-
-    @Test
-    public void canSetTimeToWaitBetweenBeforeTheNextMouseNode() {
-        mouseNode.setTimeToWaitInMilli(250);
-        assertThat(mouseNode.getTimeToWaitMillis()).isEqualTo(250);
     }
 
     @Test
@@ -180,4 +172,40 @@ public class MouseNodeFactoryTest {
         assertThat(mouseNode.getActionType()).isEqualTo(MouseAction.ACTION_RELEASE);
     }
 
+    @Test
+    public void canSaveAChainIntoFile() {
+        MouseNode mouseNodeA = new MouseNode(new MouseMoveAction(10, 200));
+        MouseNode mouseNodeB = new MouseNode(new MousePressAction(MouseEvent.BUTTON1));
+        MouseNode mouseNodeC = new MouseNode(new MouseReleaseAction(MouseEvent.BUTTON2));
+
+        mouseNodeA.setNext(mouseNodeB, 10);
+        mouseNodeB.setNext(mouseNodeC, 100);
+
+        String eol = System.getProperty("line.separator");
+        MockWriter bufferWriter = new MockWriter();
+        mouseNodeFactory.saveChainIntoBufferWriter(bufferWriter, gameWindow, mouseNodeA);
+        assertThat(bufferWriter.writenContent).isEqualTo("1;10;0.1;2.0" + eol +"2;100;1" + eol + "3;0;2");
+    }
+
+    private class MockWriter extends Writer {
+
+        public String writenContent = "";
+
+        @Override
+        public void write(char[] cbuf, int off, int len) throws IOException {
+            if (writenContent.length() > 0)
+                writenContent += System.getProperty("line.separator");
+            writenContent += String.copyValueOf(cbuf, off, len);
+        }
+
+        @Override
+        public void flush() throws IOException {
+
+        }
+
+        @Override
+        public void close() throws IOException {
+
+        }
+    }
 }
