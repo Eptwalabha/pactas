@@ -27,7 +27,7 @@ public class TASPlayerTest {
 
     @Test
     public void canPlayerLaunch() {
-        tasPlayer.play(new MouseNode());
+        tasPlayer.play();
         assertThat(tasPlayer.isPlaying()).isTrue();
     }
 
@@ -38,8 +38,8 @@ public class TASPlayerTest {
         MouseNode mouseNodeC = new MouseNode(new MouseMoveAction(10, 100));
         mouseNodeA.setNext(mouseNodeB);
         mouseNodeB.setNext(mouseNodeC);
-
-        tasPlayer.play(mouseNodeA);
+        tasPlayer.setPartition(mouseNodeA);
+        tasPlayer.run();
         assertThat(robotMock.positions.size()).isEqualTo(3);
     }
 
@@ -51,10 +51,19 @@ public class TASPlayerTest {
         mouseNodeA.setNext(mouseNodeB);
         mouseNodeB.setNext(mouseNodeC);
 
-        tasPlayer.play(mouseNodeA);
+        tasPlayer.setPartition(mouseNodeA);
+        tasPlayer.run();
         assertThat(robotMock.positions.get(0)).isEqualTo(new int[]{10, 10});
         assertThat(robotMock.positions.get(1)).isEqualTo(new int[]{100, 50});
         assertThat(robotMock.positions.get(2)).isEqualTo(new int[]{10, 100});
+    }
+
+    @Test
+    public void canSetThePartitionToBePlayed() {
+        MouseNode mouseNodeA = new MouseNode(new MouseMoveAction(10, 10));
+
+        tasPlayer.setPartition(mouseNodeA);
+        assertThat(tasPlayer.getPartition()).isEqualTo(mouseNodeA);
     }
 
     @Test
@@ -63,9 +72,31 @@ public class TASPlayerTest {
         MouseNode mouseNodeB = new MouseNode(new MouseMoveAction(30, 50));
         mouseNodeA.setNext(mouseNodeB, 50);
 
+        tasPlayer.setPartition(mouseNodeA);
         long time = System.currentTimeMillis();
-        tasPlayer.play(mouseNodeA);
+        tasPlayer.run();
         time = System.currentTimeMillis() - time;
         assertThat(time).isGreaterThanOrEqualTo(50);
+    }
+
+    @Test
+    public void canStopPlayer() {
+        tasPlayer.play();
+        tasPlayer.stop();
+        assertThat(tasPlayer.isPlaying()).isFalse();
+    }
+
+    @Test
+    public void canStopPlayerWhilePlaying() {
+        MouseNode mouseNodeA = new MouseNode(new MouseMoveAction(100, 95));
+        MouseNode mouseNodeB = new MouseNode(new MouseMoveAction(30, 50));
+        mouseNodeA.setNext(mouseNodeB, 20);
+
+        long time = System.currentTimeMillis();
+        tasPlayer.play();
+        tasPlayer.stop();
+        time = System.currentTimeMillis() - time;
+
+        assertThat(time).isLessThan(20);
     }
 }
