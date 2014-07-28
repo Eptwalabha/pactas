@@ -112,7 +112,7 @@ public class MouseNodeTest {
     public void canChangeMouseMoveActionPosition() {
         MouseMoveAction mouseMoveAction = new MouseMoveAction(20, 30);
         mouseNode.setAction(mouseMoveAction);
-        mouseNode.moveLocation(-10, 50);
+        mouseMoveAction.moveLocation(-10, 50);
         assertThat(mouseMoveAction.getLocation()).isEqualTo(new Point(10, 80));
     }
 
@@ -120,7 +120,7 @@ public class MouseNodeTest {
     public void canSetMouseMoveActionPosition() {
         MouseMoveAction mouseMoveAction = new MouseMoveAction(20, 30);
         mouseNode.setAction(mouseMoveAction);
-        mouseNode.setLocation(10, 50);
+        mouseMoveAction.setLocation(10, 50);
         assertThat(mouseMoveAction.getLocation()).isEqualTo(new Point(10, 50));
     }
 
@@ -128,7 +128,7 @@ public class MouseNodeTest {
     public void canChangeMouseButtonOnMousePressAction() {
         MousePressAction mousePressAction = new MousePressAction(0, 0, MouseEvent.BUTTON1);
         mouseNode.setAction(mousePressAction);
-        mouseNode.setButton(MouseEvent.BUTTON2);
+        mousePressAction.setButton(MouseEvent.BUTTON2);
         assertThat(mousePressAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
     }
 
@@ -136,7 +136,7 @@ public class MouseNodeTest {
     public void canChangeMouseButtonOnMouseReleaseAction() {
         MouseReleaseAction mouseReleaseAction = new MouseReleaseAction(0, 0, MouseEvent.BUTTON1);
         mouseNode.setAction(mouseReleaseAction);
-        mouseNode.setButton(MouseEvent.BUTTON2);
+        mouseReleaseAction.setButton(MouseEvent.BUTTON2);
         assertThat(mouseReleaseAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
     }
 
@@ -167,4 +167,97 @@ public class MouseNodeTest {
         assertThat(mouseNodeA.size()).isEqualTo(3);
     }
 
+    @Test
+    public void canReturnTheIndexOfANodeIfItBelongsToTheChain() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        MouseNode mouseNodeC = new MouseNode();
+
+        mouseNodeA.setNext(mouseNodeB);
+        mouseNodeB.setNext(mouseNodeC);
+
+        assertThat(mouseNodeA.indexOf(mouseNodeB)).isEqualTo(1);
+    }
+
+    @Test
+    public void canReturnIndexMinusOneWhenLookingForNullInAChain() {
+        MouseNode mouseNodeA = new MouseNode();
+        assertThat(mouseNodeA.indexOf(null)).isEqualTo(-1);
+    }
+
+    @Test
+    public void canReturnIndexZeroWhenNodeIsTheFirstNodeInAChain() {
+        assertThat(mouseNode.indexOf(mouseNode)).isEqualTo(0);
+    }
+
+    @Test
+    public void canReturnTheFirstNodeAtIndexZero() {
+        MouseNode mouseNodeA = new MouseNode();
+        assertThat(mouseNodeA.get(0)).isEqualTo(mouseNodeA);
+    }
+
+    @Test
+    public void canReturnANodeAtAGivenIndex() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        mouseNodeA.setNext(mouseNodeB);
+        assertThat(mouseNodeA.get(1)).isEqualTo(mouseNodeB);
+    }
+
+    @Test
+    public void canAppendASingleNodeToAChain() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        MouseNode mouseNodeC = new MouseNode();
+
+        mouseNodeA.setNext(mouseNodeB);
+        mouseNodeA.appendNode(mouseNodeC);
+        assertThat(mouseNodeA.indexOf(mouseNodeC)).isEqualTo(2);
+    }
+
+    @Test
+    public void canShiftASingleNodeToAChain() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        MouseNode mouseNodeC = new MouseNode();
+
+        mouseNodeA.setNext(mouseNodeB);
+        mouseNodeA.shiftNode(mouseNodeC);
+        assertThat(mouseNodeC.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void canInsertASingleNodeToAChainAtASpecificIndex() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        MouseNode mouseNodeC = new MouseNode();
+
+        mouseNodeA.setNext(mouseNodeC);
+        mouseNodeA.insertNode(1, mouseNodeB);
+        assertThat(mouseNodeA.getNext()).isEqualTo(mouseNodeB);
+        assertThat(mouseNodeC.getPrevious()).isEqualTo(mouseNodeB);
+    }
+
+    @Test
+    public void canInsertASingleNodeToAChainAtIndexZero() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        MouseNode mouseNodeC = new MouseNode();
+
+        mouseNodeA.setNext(mouseNodeB);
+        mouseNodeA.insertNode(0, mouseNodeC);
+        assertThat(mouseNodeC.getNext()).isEqualTo(mouseNodeA);
+    }
+
+    @Test
+    public void canInsertASingleNodeToAChainAtItsEnd() {
+        MouseNode mouseNodeA = new MouseNode();
+        MouseNode mouseNodeB = new MouseNode();
+        MouseNode mouseNodeC = new MouseNode();
+
+        mouseNodeA.setNext(mouseNodeB);
+        mouseNodeA.insertNode(2, mouseNodeC);
+        assertThat(mouseNodeB.getNext()).isEqualTo(mouseNodeC);
+        assertThat(mouseNodeC.getPrevious()).isEqualTo(mouseNodeB);
+    }
 }

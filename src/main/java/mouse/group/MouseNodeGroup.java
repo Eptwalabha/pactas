@@ -34,7 +34,7 @@ public class MouseNodeGroup {
 
     public void moveLocation(int x, int y) {
         for (MouseNode mouseNode : mouseNodes) {
-            mouseNode.moveLocation(x, y);
+            mouseNode.getMouseAction().moveLocation(x, y);
         }
     }
 

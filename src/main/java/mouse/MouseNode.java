@@ -67,35 +67,14 @@ public class MouseNode {
         this.timeTillNext = timeToWait;
     }
 
-    public void moveLocation(int x, int y) {
-        action.moveLocation(x, y);
-    }
-
-    public void setLocation(int x, int y) {
-        action.setLocation(x, y);
-    }
-
-    public void setButton(int button) {
-        action.setButton(button);
-    }
-
-    public Point getLocation() {
-        return action.getLocation();
-    }
-
     public int size() {
-
-        if (nextNode == null)
-            return 1;
-
-        int size = 1;
         MouseNode cursor = this;
-        while (cursor.nextNode != null) {
-            ++size;
-            cursor = cursor.nextNode;
+        int index = 0;
+        while (cursor != null) {
+            index++;
+            cursor = cursor.getNext();
         }
-
-        return size;
+        return index;
     }
 
     public String getActionType() {
@@ -116,6 +95,49 @@ public class MouseNode {
     }
 
     public Point getLocation(long time) {
-        return transition.getLocation(getLocation(), nextNode.getLocation(), timeTillNext, time);
+        return transition.getLocation(action.getLocation(), nextNode.action.getLocation(), timeTillNext, time);
+    }
+
+    public int indexOf(MouseNode mouseNode) {
+        MouseNode cursor = this;
+        int index = 0;
+        while (cursor != mouseNode && cursor != null) {
+            index++;
+            cursor = cursor.getNext();
+        }
+        return cursor != null ? index : -1;
+    }
+
+    public void appendNode(MouseNode mouseNode) {
+        MouseNode cursor = get(this.size() - 1);
+        cursor.setNext(mouseNode);
+    }
+
+    public void shiftNode(MouseNode mouseNode) {
+        mouseNode.setNext(this);
+    }
+
+    public void insertNode(int index, MouseNode mouseNode) {
+        if (index == 0) {
+            this.shiftNode(mouseNode);
+            return;
+        }
+        if (index >= this.size()) {
+            this.appendNode(mouseNode);
+            return;
+        }
+        MouseNode cursor = get(index);
+        cursor.previousNode.setNext(mouseNode);
+        mouseNode.setNext(cursor);
+    }
+
+    public MouseNode get(int index) {
+        MouseNode cursor = this;
+        int cursorIndex = 0;
+        while (cursorIndex != index) {
+            cursorIndex++;
+            cursor = cursor.getNext();
+        }
+        return cursor;
     }
 }
