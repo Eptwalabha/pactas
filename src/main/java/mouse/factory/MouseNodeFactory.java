@@ -22,8 +22,8 @@ public class MouseNodeFactory {
     public MouseNodeFactory(GameWindow gameWindow) {
         actions = new HashMap<String, MouseActionFactory>();
         actions.put(MouseAction.ACTION_MOVE, new MouseMoveFactory(gameWindow));
-        actions.put(MouseAction.ACTION_PRESS, new MousePressFactory());
-        actions.put(MouseAction.ACTION_RELEASE, new MouseReleaseFactory());
+        actions.put(MouseAction.ACTION_PRESS, new MousePressFactory(gameWindow));
+        actions.put(MouseAction.ACTION_RELEASE, new MouseReleaseFactory(gameWindow));
     }
 
     public MouseNode createMouseActionFromString(String action) throws WrongParameter {

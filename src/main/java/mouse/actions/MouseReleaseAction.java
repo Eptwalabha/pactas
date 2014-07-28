@@ -9,10 +9,11 @@ import java.awt.*;
  * Date: 14/07/2014
  * Time: 19:28
  */
-public class MouseReleaseAction implements MouseAction {
+public class MouseReleaseAction extends MouseAction {
     private int button;
 
-    public MouseReleaseAction(int button) {
+    public MouseReleaseAction(int x, int y, int button) {
+        super(x, y);
         this.button = button;
     }
 
@@ -27,14 +28,8 @@ public class MouseReleaseAction implements MouseAction {
 
     @Override
     public String getString(GameWindow gameWindow) {
-        return String.valueOf(button);
+        return gameWindow.getPercentageX(location.x) + ";" + gameWindow.getPercentageY(location.y) + ";" + String.valueOf(button);
     }
-
-    @Override
-    public void moveLocation(int x, int y) {}
-
-    @Override
-    public void setLocation(int x, int y) {}
 
     @Override
     public void setButton(int button) {

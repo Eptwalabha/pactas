@@ -29,21 +29,20 @@ public class MouseNodeTest {
     }
 
     @Test
-    public void byDefaultAMouseNodeHasAMouseNoActionAsMouseAction() {
+    public void byDefaultAMouseNodeHasAMouseMoveActionAsMouseAction() {
         MouseAction mouseAction = mouseNode.getMouseAction();
-        assertThat(mouseAction.getType()).isEqualTo(MouseAction.ACTION_NONE);
+        assertThat(mouseAction.getType()).isEqualTo(MouseAction.ACTION_MOVE);
     }
 
     @Test
     public void canSaveAMouseMoveInAMouseMoveAction() {
         MouseMoveAction mouseMoveAction = new MouseMoveAction(10, 200);
-        assertThat(mouseMoveAction.getX()).isEqualTo(10);
-        assertThat(mouseMoveAction.getY()).isEqualTo(200);
+        assertThat(mouseMoveAction.getLocation()).isEqualTo(new Point(10, 200));
     }
 
     @Test
     public void canSaveAMouseClickInAMouseClickAction() {
-        MousePressAction mouseClickAction = new MousePressAction(MouseEvent.BUTTON1);
+        MousePressAction mouseClickAction = new MousePressAction(0, 0, MouseEvent.BUTTON1);
         assertThat(mouseClickAction.getButton()).isEqualTo(MouseEvent.BUTTON1);
     }
 
@@ -57,14 +56,14 @@ public class MouseNodeTest {
 
     @Test
     public void canPressTheRightMouseButtonWhenMousePressActionIsProcessed() {
-        MousePressAction mousePressAction = new MousePressAction(MouseEvent.BUTTON1);
+        MousePressAction mousePressAction = new MousePressAction(0, 0, MouseEvent.BUTTON1);
         mousePressAction.process(robot);
         assertThat(robot.getLastButtonMousePressed()).isEqualTo(MouseEvent.BUTTON1);
     }
 
     @Test
     public void canReleaseTheRightMouseButtonWhenMouseReleaseActionIsProcessed() {
-        MouseReleaseAction mouseReleaseAction = new MouseReleaseAction(MouseEvent.BUTTON2);
+        MouseReleaseAction mouseReleaseAction = new MouseReleaseAction(0, 0, MouseEvent.BUTTON2);
         mouseReleaseAction.process(robot);
         assertThat(robot.getLastButtonMouseReleased()).isEqualTo(MouseEvent.BUTTON2);
     }
@@ -114,8 +113,7 @@ public class MouseNodeTest {
         MouseMoveAction mouseMoveAction = new MouseMoveAction(20, 30);
         mouseNode.setAction(mouseMoveAction);
         mouseNode.moveLocation(-10, 50);
-        assertThat(mouseMoveAction.getX()).isEqualTo(10);
-        assertThat(mouseMoveAction.getY()).isEqualTo(80);
+        assertThat(mouseMoveAction.getLocation()).isEqualTo(new Point(10, 80));
     }
 
     @Test
@@ -123,13 +121,12 @@ public class MouseNodeTest {
         MouseMoveAction mouseMoveAction = new MouseMoveAction(20, 30);
         mouseNode.setAction(mouseMoveAction);
         mouseNode.setLocation(10, 50);
-        assertThat(mouseMoveAction.getX()).isEqualTo(10);
-        assertThat(mouseMoveAction.getY()).isEqualTo(50);
+        assertThat(mouseMoveAction.getLocation()).isEqualTo(new Point(10, 50));
     }
 
     @Test
     public void canChangeMouseButtonOnMousePressAction() {
-        MousePressAction mousePressAction = new MousePressAction(MouseEvent.BUTTON1);
+        MousePressAction mousePressAction = new MousePressAction(0, 0, MouseEvent.BUTTON1);
         mouseNode.setAction(mousePressAction);
         mouseNode.setButton(MouseEvent.BUTTON2);
         assertThat(mousePressAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
@@ -137,7 +134,7 @@ public class MouseNodeTest {
 
     @Test
     public void canChangeMouseButtonOnMouseReleaseAction() {
-        MouseReleaseAction mouseReleaseAction = new MouseReleaseAction(MouseEvent.BUTTON1);
+        MouseReleaseAction mouseReleaseAction = new MouseReleaseAction(0, 0, MouseEvent.BUTTON1);
         mouseNode.setAction(mouseReleaseAction);
         mouseNode.setButton(MouseEvent.BUTTON2);
         assertThat(mouseReleaseAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
@@ -146,8 +143,8 @@ public class MouseNodeTest {
     @Test
     public void canMouseActionReturnItsType() {
         MouseAction mouseMoveAction = new MouseMoveAction(10, 20);
-        MouseAction mousePressAction = new MousePressAction(MouseEvent.BUTTON1);
-        MouseAction mouseReleaseAction = new MouseReleaseAction(MouseEvent.BUTTON1);
+        MouseAction mousePressAction = new MousePressAction(0, 0, MouseEvent.BUTTON1);
+        MouseAction mouseReleaseAction = new MouseReleaseAction(0, 0, MouseEvent.BUTTON1);
         assertThat(mouseMoveAction.getType()).isEqualTo(MouseAction.ACTION_MOVE);
         assertThat(mousePressAction.getType()).isEqualTo(MouseAction.ACTION_PRESS);
         assertThat(mouseReleaseAction.getType()).isEqualTo(MouseAction.ACTION_RELEASE);

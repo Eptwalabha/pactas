@@ -70,10 +70,8 @@ public class MouseNodeGroupTest {
         mouseNodeGroup.add(mouseNodeA);
         mouseNodeGroup.add(mouseNodeB);
         mouseNodeGroup.moveLocation(10, 20);
-        assertThat(mouseMoveActionA.getX()).isEqualTo(20);
-        assertThat(mouseMoveActionA.getY()).isEqualTo(40);
-        assertThat(mouseMoveActionB.getX()).isEqualTo(30);
-        assertThat(mouseMoveActionB.getY()).isEqualTo(520);
+        assertThat(mouseMoveActionA.getLocation()).isEqualTo(new Point(20, 40));
+        assertThat(mouseMoveActionB.getLocation()).isEqualTo(new Point(30, 520));
     }
 
     @Test
@@ -117,9 +115,7 @@ public class MouseNodeGroupTest {
 
         mouseNodeGroup.resizeBoundingRectangle(0.5f, 0.5f);
 
-        assertThat(mouseMoveActionA.getX()).isEqualTo(20);
-        assertThat(mouseMoveActionA.getY()).isEqualTo((int) ((130 - 50) * 0.5f) + 50);
-        assertThat(mouseMoveActionB.getX()).isEqualTo((int) ((100 - 20) * 0.5f) + 20);
-        assertThat(mouseMoveActionB.getY()).isEqualTo(50);
+        assertThat(mouseMoveActionA.getLocation()).isEqualTo(new Point(20, (int) ((130 - 50) * 0.5f) + 50));
+        assertThat(mouseMoveActionB.getLocation()).isEqualTo(new Point((int) ((100 - 20) * 0.5f) + 20, 50));
     }
 }

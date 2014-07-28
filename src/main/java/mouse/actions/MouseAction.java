@@ -9,21 +9,40 @@ import java.awt.*;
  * Date: 14/07/2014
  * Time: 21:42
  */
-public interface MouseAction {
-    String ACTION_NONE = "0";
-    String ACTION_MOVE = "1";
-    String ACTION_PRESS = "2";
-    String ACTION_RELEASE = "3";
+public abstract class MouseAction {
+    public static final String ACTION_MOVE = "1";
+    public static final String ACTION_PRESS = "2";
+    public static final String ACTION_RELEASE = "3";
 
-    public void process(Robot robot);
+    protected Point location;
 
-    public String getString(GameWindow gameWindow);
+    public MouseAction() {
+        location = new Point();
+    }
 
-    public void moveLocation(int x, int y);
+    public MouseAction(int x, int y) {
+        location = new Point(x, y);
+    }
 
-    public void setLocation(int x, int y);
+    public abstract void process(Robot robot);
 
-    public void setButton(int button);
+    public abstract String getString(GameWindow gameWindow);
 
-    String getType();
+    public void moveLocation(int x, int y) {
+        location.x += x;
+        location.y += y;
+    }
+
+    public void setLocation(int x, int y) {
+        location.x = x;
+        location.y = y;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public abstract void setButton(int button);
+
+    public abstract String getType();
 }

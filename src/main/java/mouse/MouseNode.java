@@ -1,8 +1,12 @@
 package mouse;
 
 import mouse.actions.MouseAction;
-import mouse.actions.MouseNoAction;
+import mouse.actions.MouseMoveAction;
+import mouse.transition.ConstantTransition;
+import mouse.transition.MouseTransition;
 import utility.GameWindow;
+
+import java.awt.*;
 
 /**
  * User: Eptwalabha
@@ -13,14 +17,16 @@ public class MouseNode {
     private MouseNode nextNode;
     private MouseNode previousNode;
     private MouseAction action;
-    private long timeToWait;
+    private long timeTillNext;
+    private MouseTransition transition;
 
     public MouseNode() {
-        this(new MouseNoAction());
+        this(new MouseMoveAction(0, 0));
     }
 
     public MouseNode(MouseAction action) {
         this.action = action;
+        this.transition = new ConstantTransition();
     }
 
     public void setAction(MouseAction action) {
@@ -28,13 +34,13 @@ public class MouseNode {
     }
 
     public void setNext(MouseNode mouseNode) {
-        setNext(mouseNode, timeToWait);
+        setNext(mouseNode, timeTillNext);
     }
 
     public void setNext(MouseNode mouseNode, long timeToWait) {
         mouseNode.previousNode = this;
         this.nextNode = mouseNode;
-        this.timeToWait = timeToWait;
+        this.timeTillNext = timeToWait;
     }
 
     public MouseNode getNext() {
@@ -50,15 +56,15 @@ public class MouseNode {
     }
 
     public String getString(GameWindow gameWindow) {
-        return action.getType() + ";" + timeToWait + ";" + action.getString(gameWindow);
+        return action.getType() + ";" + timeTillNext + ";" + action.getString(gameWindow);
     }
 
     public long getTimeToWaitMillis() {
-        return timeToWait;
+        return timeTillNext;
     }
 
     public void setTimeToWaitInMilli(long timeToWait) {
-        this.timeToWait = timeToWait;
+        this.timeTillNext = timeToWait;
     }
 
     public void moveLocation(int x, int y) {
@@ -71,6 +77,10 @@ public class MouseNode {
 
     public void setButton(int button) {
         action.setButton(button);
+    }
+
+    public Point getLocation() {
+        return action.getLocation();
     }
 
     public int size() {
@@ -95,5 +105,17 @@ public class MouseNode {
     public void detachNode() {
         nextNode.previousNode = null;
         nextNode = null;
+    }
+
+    public void setMouseTransition(MouseTransition transition) {
+        this.transition = transition;
+    }
+
+    public MouseTransition getTransition() {
+        return transition;
+    }
+
+    public Point getLocation(long time) {
+        return transition.getLocation(getLocation(), nextNode.getLocation(), timeTillNext, time);
     }
 }

@@ -9,42 +9,20 @@ import java.awt.*;
  * Date: 14/07/2014
  * Time: 19:24
  */
-public class MouseMoveAction implements MouseAction {
-    private int x;
-    private int y;
+public class MouseMoveAction extends MouseAction {
 
     public MouseMoveAction(int x, int y) {
-        setLocation(x, y);
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
+        super(x, y);
     }
 
     @Override
     public void process(Robot robot) {
-        robot.mouseMove(x, y);
+        robot.mouseMove(location.x, location.y);
     }
 
     @Override
     public String getString(GameWindow gameWindow) {
-        return gameWindow.getPercentageX(x) + ";" + gameWindow.getPercentageY(y);
-    }
-
-    @Override
-    public void moveLocation(int x, int y) {
-        this.x += x;
-        this.y += y;
-    }
-
-    @Override
-    public void setLocation(int x, int y) {
-        this.x = x;
-        this.y = y;
+        return gameWindow.getPercentageX(location.x) + ";" + gameWindow.getPercentageY(location.y);
     }
 
     @Override
@@ -53,9 +31,5 @@ public class MouseMoveAction implements MouseAction {
     @Override
     public String getType() {
         return ACTION_MOVE;
-    }
-
-    public Point getLocation() {
-        return new Point(x, y);
     }
 }

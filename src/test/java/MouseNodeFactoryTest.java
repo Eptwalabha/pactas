@@ -10,6 +10,7 @@ import org.junit.Test;
 import utility.GameWindow;
 
 import javax.swing.text.StringContent;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.*;
 
@@ -50,8 +51,8 @@ public class MouseNodeFactoryTest {
         try {
             mouseNode = mouseNodeFactory.createMouseActionFromString("1;0;0.1;0.2");
             MouseMoveAction mouseMoveAction = (MouseMoveAction) mouseNode.getMouseAction();
-            assertThat(mouseMoveAction.getX()).isEqualTo(10);
-            assertThat(mouseMoveAction.getY()).isEqualTo(20);
+            Point location = mouseMoveAction.getLocation();
+            assertThat(location).isEqualTo(new Point(10, 20));
         } catch (WrongParameter e) {
             e.printStackTrace();
             fail();
@@ -61,7 +62,7 @@ public class MouseNodeFactoryTest {
     @Test
     public void canCreateAMousePressActionFromAStringOfParameters() {
         try {
-            mouseNode = mouseNodeFactory.createMouseActionFromString("2;0;" + MouseEvent.BUTTON1);
+            mouseNode = mouseNodeFactory.createMouseActionFromString("2;0;0;0;" + MouseEvent.BUTTON1);
             MousePressAction mousePressAction = (MousePressAction) mouseNode.getMouseAction();
             assertThat(mousePressAction.getButton()).isEqualTo(MouseEvent.BUTTON1);
         } catch (WrongParameter e) {
@@ -73,7 +74,7 @@ public class MouseNodeFactoryTest {
     @Test
     public void canCreateAMouseReleaseActionFromAStringOfParameters() {
         try {
-            mouseNode = mouseNodeFactory.createMouseActionFromString("3;0;" + MouseEvent.BUTTON2);
+            mouseNode = mouseNodeFactory.createMouseActionFromString("3;0;0;0;" + MouseEvent.BUTTON2);
             MouseReleaseAction mouseReleaseAction = (MouseReleaseAction) mouseNode.getMouseAction();
             assertThat(mouseReleaseAction.getButton()).isEqualTo(MouseEvent.BUTTON2);
         } catch (WrongParameter e) {
@@ -88,7 +89,7 @@ public class MouseNodeFactoryTest {
             mouseNodeFactory.createMouseActionFromString("3;0;0.0;0.0");
             fail();
         } catch (WrongParameter e) {
-            assertThat(e.getMessage()).isEqualTo("wrong parameter : got 4 parameters when 3 where expected");
+            assertThat(e.getMessage()).isEqualTo("wrong parameter : got 4 parameters when 5 where expected");
         }
     }
 
@@ -132,14 +133,14 @@ public class MouseNodeFactoryTest {
 
     @Test
     public void canMouseNodePressGenerateAString() {
-        mouseNode.setAction(new MousePressAction(MouseEvent.BUTTON1));
-        assertThat(mouseNode.getString(gameWindow)).isEqualTo(MouseAction.ACTION_PRESS + ";0;" + MouseEvent.BUTTON1);
+        mouseNode.setAction(new MousePressAction(10, 20, MouseEvent.BUTTON1));
+        assertThat(mouseNode.getString(gameWindow)).isEqualTo(MouseAction.ACTION_PRESS + ";0;0.1;0.2;" + MouseEvent.BUTTON1);
     }
 
     @Test
     public void canMouseNodeReleaseGenerateAString() {
-        mouseNode.setAction(new MouseReleaseAction(MouseEvent.BUTTON2));
-        assertThat(mouseNode.getString(gameWindow)).isEqualTo(MouseAction.ACTION_RELEASE + ";0;" + MouseEvent.BUTTON2);
+        mouseNode.setAction(new MouseReleaseAction(30, 40, MouseEvent.BUTTON2));
+        assertThat(mouseNode.getString(gameWindow)).isEqualTo(MouseAction.ACTION_RELEASE + ";0;0.3;0.4;" + MouseEvent.BUTTON2);
     }
 
     @Test
@@ -152,7 +153,7 @@ public class MouseNodeFactoryTest {
     @Test
     public void canCreateAMouseNodeChainFromABufferedReader() throws IOException, WrongParameter {
         String eol = System.getProperty("line.separator");
-        Reader fileReader = new StringReader("1;10;0.5;0.1" + eol +"2;20;1" + eol + "1;10;0.1;0.35268");
+        Reader fileReader = new StringReader("1;10;0.5;0.1" + eol +"2;20;0;0;1" + eol + "1;10;0.1;0.35268");
         BufferedReader bufferReader = new BufferedReader(fileReader);
         MouseNode mouseNode = mouseNodeFactory.loadChainFromBufferReader(bufferReader);
         assertThat(mouseNode.size()).isEqualTo(3);
@@ -161,7 +162,7 @@ public class MouseNodeFactoryTest {
     @Test
     public void canCreateCorrectMouseActionFromFile() throws IOException, WrongParameter {
         String eol = System.getProperty("line.separator");
-        Reader fileReader = new StringReader("1;10;0.5;0.1" + eol +"2;20;1" + eol + "3;50;1");
+        Reader fileReader = new StringReader("1;10;0.5;0.1" + eol +"2;20;0;0;1" + eol + "3;50;0;0;1");
         BufferedReader bufferReader = new BufferedReader(fileReader);
         MouseNode mouseNode = mouseNodeFactory.loadChainFromBufferReader(bufferReader);
 
@@ -175,8 +176,8 @@ public class MouseNodeFactoryTest {
     @Test
     public void canSaveAChainIntoFile() {
         MouseNode mouseNodeA = new MouseNode(new MouseMoveAction(10, 200));
-        MouseNode mouseNodeB = new MouseNode(new MousePressAction(MouseEvent.BUTTON1));
-        MouseNode mouseNodeC = new MouseNode(new MouseReleaseAction(MouseEvent.BUTTON2));
+        MouseNode mouseNodeB = new MouseNode(new MousePressAction(0, 0, MouseEvent.BUTTON1));
+        MouseNode mouseNodeC = new MouseNode(new MouseReleaseAction(0, 0, MouseEvent.BUTTON2));
 
         mouseNodeA.setNext(mouseNodeB, 10);
         mouseNodeB.setNext(mouseNodeC, 100);
@@ -184,7 +185,7 @@ public class MouseNodeFactoryTest {
         String eol = System.getProperty("line.separator");
         MockWriter bufferWriter = new MockWriter();
         mouseNodeFactory.saveChainIntoBufferWriter(bufferWriter, gameWindow, mouseNodeA);
-        assertThat(bufferWriter.writenContent).isEqualTo("1;10;0.1;2.0" + eol +"2;100;1" + eol + "3;0;2");
+        assertThat(bufferWriter.writenContent).isEqualTo("1;10;0.1;2.0" + eol +"2;100;0.0;0.0;1" + eol + "3;0;0.0;0.0;2");
     }
 
     private class MockWriter extends Writer {
