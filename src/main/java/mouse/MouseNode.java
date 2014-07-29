@@ -38,7 +38,8 @@ public class MouseNode {
     }
 
     public void setNext(MouseNode mouseNode, long timeToWait) {
-        mouseNode.previousNode = this;
+        if (mouseNode != null)
+            mouseNode.previousNode = this;
         this.nextNode = mouseNode;
         this.timeTillNext = timeToWait;
     }
@@ -139,5 +140,14 @@ public class MouseNode {
             cursor = cursor.getNext();
         }
         return cursor;
+    }
+
+    public void setPrevious(MouseNode mouseNode) {
+        previousNode = mouseNode;
+    }
+
+    public void clearLink() {
+        previousNode = null;
+        nextNode = null;
     }
 }

@@ -38,6 +38,10 @@ public abstract class MouseAction {
         location.y = y;
     }
 
+    public void setLocation(Point location) {
+        this.location = location;
+    }
+
     public Point getLocation() {
         return location;
     }
