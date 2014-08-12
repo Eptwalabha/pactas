@@ -10,7 +10,7 @@ import java.awt.*;
 public class ConstantTransition implements MouseTransition {
 
     @Override
-    public Point getLocation(Point pointA, Point pointB, long deltaTime, long time) {
+    public Point getLocation(Point pointA, Point pointB, float percent) {
         return new Point(pointA);
     }
 

@@ -12,7 +12,7 @@ public interface MouseTransition {
     public static final int CONSTANT = 0;
     public static final int LINEAR = 1;
 
-    public Point getLocation(Point pointA, Point pointB, long deltaTime, long time);
+    public Point getLocation(Point pointA, Point pointB, float percent);
 
     public int getType();
 }

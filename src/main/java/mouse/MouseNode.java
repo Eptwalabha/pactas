@@ -19,6 +19,7 @@ public class MouseNode {
     private MouseAction action;
     private long timeTillNext;
     private MouseTransition transition;
+    private long timeToExecute;
 
     public MouseNode() {
         this(new MouseMoveAction(0, 0));
@@ -95,8 +96,8 @@ public class MouseNode {
         return transition;
     }
 
-    public Point getLocation(long time) {
-        return transition.getLocation(action.getLocation(), nextNode.action.getLocation(), timeTillNext, time);
+    public Point getLocation(float percent) {
+        return transition.getLocation(action.getLocation(), nextNode.action.getLocation(), percent);
     }
 
     public int indexOf(MouseNode mouseNode) {

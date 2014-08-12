@@ -65,4 +65,8 @@ public class TASPlayer implements Runnable {
     public MouseNode getPartition() {
         return partition;
     }
+
+    public Point getLocation(MouseNode mouseNode, float percent) {
+        return null;
+    }
 }
